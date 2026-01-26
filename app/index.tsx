@@ -38,6 +38,9 @@ export default function Index() {
         <Button onPress={() => router.push("/games/hamburger")} variant="secondary">
           Ver Hamburguesa
         </Button>
+        <Button onPress={() => router.push("/games/hamburger-builder")} variant="primary">
+          🍔 Construir Hamburguesa
+        </Button>
       </View>
 
       <Text style={styles.footer}>Usa el acelerómetro de tu dispositivo</Text>

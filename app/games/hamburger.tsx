@@ -37,7 +37,7 @@ export default function HamburgerScreen() {
 
 				{/* Contenedor del modelo 3D */}
 				<View style={modelContainerStyle}>
-					<Hamburger3D layout={layout} />
+					<Hamburger3D layout={layout} selectedIngredients={["queso", "pepinillos", "lechuga", "carne"]} />
 				</View>
 
 				{/* Leyenda de capas */}
@@ -52,6 +52,14 @@ export default function HamburgerScreen() {
 						<LayerItem name="Pan Inferior" color="#D4A574" />
 					</View>
 				</View>
+
+				{/* Botón para ir al constructor */}
+				<Button
+					onPress={() => router.push("/games/hamburger-builder")}
+					variant="primary"
+				>
+					🍳 Construir mi Hamburguesa
+				</Button>
 
 				<Button onPress={() => router.push("/")} variant="secondary">
 					← Volver al Inicio

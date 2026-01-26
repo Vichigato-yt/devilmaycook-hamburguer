@@ -8,8 +8,12 @@ import { SkeletonUtils } from "three-stdlib";
 
 export type Hamburger3DLayout = "single" | "separate";
 
+export type HamburgerIngredientType = "queso" | "pepinillos" | "lechuga" | "carne";
+
 type Hamburger3DProps = {
 	layout?: Hamburger3DLayout;
+	selectedIngredients?: HamburgerIngredientType[];
+	showOnlyTopBun?: boolean;
 };
 
 type LayerConfig = {
@@ -67,50 +71,70 @@ function LoadingFallback() {
 	);
 }
 
-export function Hamburger3D({ layout = "single" }: Hamburger3DProps) {
+export function Hamburger3D({ 
+	layout = "single", 
+	selectedIngredients = ["queso", "pepinillos", "lechuga", "carne"],
+	showOnlyTopBun = false,
+}: Hamburger3DProps) {
 	const dpr = Math.min(2, Math.max(1, PixelRatio.get()));
 
-	const layers: LayerConfig[] = useMemo(
-		() => [
-			{
-				id: "pansuperior",
-				label: "Pan Superior",
-				modelPath: require("@/assets/images/Hamburguesa/pansuperior.glb"),
-				scale: 0.9,
-			},
-			{
-				id: "queso",
-				label: "Queso",
-				modelPath: require("@/assets/images/Hamburguesa/queso.glb"),
-				scale: 0.88,
-			},
-			{
-				id: "pepinillos",
-				label: "Pepinillos",
-				modelPath: require("@/assets/images/Hamburguesa/pepinillos.glb"),
-				scale: 0.88,
-			},
-			{
-				id: "leshuga",
-				label: "Lechuga",
-				modelPath: require("@/assets/images/Hamburguesa/leshuga.glb"),
-				scale: 0.88,
-			},
-			{
-				id: "carne",
-				label: "Carne",
-				modelPath: require("@/assets/images/Hamburguesa/carne.glb"),
-				scale: 0.88,
-			},
-			{
-				id: "paninferior",
-				label: "Pan Inferior",
-				modelPath: require("@/assets/images/Hamburguesa/paninferior.glb"),
-				scale: 0.9,
-			},
-		],
-		[]
-	);
+	// Construir las capas dinámicamente
+	const allLayers: LayerConfig[] = [
+		{
+			id: "pansuperior",
+			label: "Pan Superior",
+			modelPath: require("@/assets/images/Hamburguesa/pansuperior.glb"),
+			scale: 0.9,
+		},
+		{
+			id: "queso",
+			label: "Queso",
+			modelPath: require("@/assets/images/Hamburguesa/queso.glb"),
+			scale: 0.88,
+		},
+		{
+			id: "pepinillos",
+			label: "Pepinillos",
+			modelPath: require("@/assets/images/Hamburguesa/pepinillos.glb"),
+			scale: 0.88,
+		},
+		{
+			id: "leshuga",
+			label: "Lechuga",
+			modelPath: require("@/assets/images/Hamburguesa/leshuga.glb"),
+			scale: 0.88,
+		},
+		{
+			id: "carne",
+			label: "Carne",
+			modelPath: require("@/assets/images/Hamburguesa/carne.glb"),
+			scale: 0.88,
+		},
+		{
+			id: "paninferior",
+			label: "Pan Inferior",
+			modelPath: require("@/assets/images/Hamburguesa/paninferior.glb"),
+			scale: 0.9,
+		},
+	];
+
+	// Filtrar capas según ingredientes seleccionados
+	const layers = useMemo(() => {
+		if (showOnlyTopBun) {
+			return [allLayers[0]]; // Solo pan superior
+		}
+
+		const visibleLayers: LayerConfig[] = [allLayers[0]]; // Pan superior siempre visible
+		
+		if (selectedIngredients.includes("queso")) visibleLayers.push(allLayers[1]);
+		if (selectedIngredients.includes("pepinillos")) visibleLayers.push(allLayers[2]);
+		if (selectedIngredients.includes("lechuga")) visibleLayers.push(allLayers[3]);
+		if (selectedIngredients.includes("carne")) visibleLayers.push(allLayers[4]);
+		
+		visibleLayers.push(allLayers[5]); // Pan inferior siempre visible
+
+		return visibleLayers;
+	}, [selectedIngredients, showOnlyTopBun]);
 
 	return <Hamburger3DInternal dpr={dpr} layers={layers} layout={layout} />;
 }
@@ -171,7 +195,7 @@ function Hamburger3DInternal({
 									frameloop="demand"
 									shadows
 				gl={{ antialias: true, powerPreference: "high-performance" }}
-				camera={{ position: [2.2, 1.25, 6.2], fov: 38, near: 0.1, far: 60 }}
+				camera={{ position: [0, 2.0, 5.5], fov: 35, near: 0.1, far: 60 }}
 				style={styles.canvas}
 			>
 				<color attach="background" args={["#f8f8f8"]} />

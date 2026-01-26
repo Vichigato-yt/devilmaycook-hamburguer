@@ -1,8 +1,8 @@
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text, type ReactNode } from "react-native";
 
 type ButtonProps = {
 	onPress: () => void;
-	children: string;
+	children: string | ReactNode;
 	variant?: "primary" | "secondary";
 	disabled?: boolean;
 };
@@ -19,7 +19,11 @@ export function Button({ onPress, children, variant = "primary", disabled = fals
 				disabled && styles.disabled,
 			]}
 		>
-			<Text style={[styles.text, variant === "secondary" && styles.textSecondary]}>{children}</Text>
+			{typeof children === "string" ? (
+				<Text style={[styles.text, variant === "secondary" && styles.textSecondary]}>{children}</Text>
+			) : (
+				children
+			)}
 		</Pressable>
 	);
 }
