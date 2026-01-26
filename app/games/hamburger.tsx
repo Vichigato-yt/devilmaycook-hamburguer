@@ -58,7 +58,7 @@ export default function HamburgerScreen() {
 					onPress={() => router.push("/games/hamburger-builder")}
 					variant="primary"
 				>
-					🍳 Construir mi Hamburguesa
+					Construir mi Hamburguesa
 				</Button>
 
 				<Button onPress={() => router.push("/")} variant="secondary">

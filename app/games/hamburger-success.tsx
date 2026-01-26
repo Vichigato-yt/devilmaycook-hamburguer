@@ -48,13 +48,6 @@ export default function HamburgerSuccessScreen() {
 				<DetailItem label="Total pagado" value={`$${totalPrice.toFixed(2)}`} highlight />
 			</View>
 
-			{/* Información adicional */}
-			<View style={styles.infoBox}>
-				<Text style={styles.infoBoxTitle}>📱 Número de Orden</Text>
-				<Text style={styles.orderNumber}>ORD-{Math.random().toString(36).substr(2, 9).toUpperCase()}</Text>
-				<Text style={styles.infoBoxSubtitle}>Guarda este número para tu referencia</Text>
-			</View>
-
 			{/* Botones de acción */}
 			<View style={styles.actionButtons}>
 				<Button onPress={() => router.push("./hamburger-builder")} variant="primary">
@@ -142,32 +135,6 @@ const styles = StyleSheet.create({
 	divider: {
 		height: 1,
 		backgroundColor: "#e5e5e5",
-	},
-	infoBox: {
-		width: "100%",
-		backgroundColor: "#ecfdf5",
-		borderRadius: 12,
-		padding: 16,
-		gap: 8,
-		borderWidth: 1,
-		borderColor: "#a7f3d0",
-		alignItems: "center",
-	},
-	infoBoxTitle: {
-		fontSize: 13,
-		fontWeight: "600",
-		color: "#047857",
-	},
-	orderNumber: {
-		fontSize: 18,
-		fontWeight: "700",
-		color: "#10b981",
-		letterSpacing: 1,
-	},
-	infoBoxSubtitle: {
-		fontSize: 12,
-		color: "#059669",
-		marginTop: 4,
 	},
 	actionButtons: {
 		width: "100%",

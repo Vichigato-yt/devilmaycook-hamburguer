@@ -60,7 +60,7 @@ export default function HamburgerCheckoutScreen() {
 						/>
 
 						{/* Ingredientes seleccionados */}
-						{selectedIngredients.map((ingredient) => {
+						{selectedIngredients.map((ingredient, index) => {
 							const config = HAMBURGER_INGREDIENTS[ingredient];
 							const colorMap: Record<HamburgerIngredient, string> = {
 								queso: "#FFD700",
@@ -70,7 +70,7 @@ export default function HamburgerCheckoutScreen() {
 							};
 							return (
 								<ItemRow
-									key={ingredient}
+									key={`${ingredient}-${index}`}
 									label={config.label}
 									price={config.price}
 									color={colorMap[ingredient]}
@@ -110,7 +110,7 @@ export default function HamburgerCheckoutScreen() {
 
 				{/* Información de entrega */}
 				<View style={styles.infoCard}>
-					<Text style={styles.infoTitle}>📍 Información de Entrega</Text>
+					<Text style={styles.infoTitle}>Información de Entrega</Text>
 					<Text style={styles.infoText}>Tu hamburguesa será preparada al momento</Text>
 					<Text style={styles.infoText}>Tiempo estimado: 5-10 minutos</Text>
 				</View>
@@ -118,7 +118,7 @@ export default function HamburgerCheckoutScreen() {
 				{/* Botones de acción */}
 				<View style={styles.actionButtons}>
 					<Button onPress={handleConfirmPurchase} variant="primary">
-						✓ Confirmar Compra
+						Confirmar Compra
 					</Button>
 					<Button onPress={() => router.back()} variant="secondary">
 						← Volver a Editar
