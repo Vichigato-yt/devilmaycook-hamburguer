@@ -1,26 +1,48 @@
-import { Pressable, StyleSheet, Text, type ReactNode } from "react-native";
+import type { ReactNode } from "react";
+import { Pressable, StyleSheet, Text } from "react-native";
 
 type ButtonProps = {
 	onPress: () => void;
-	children: string | ReactNode;
+	children: ReactNode;
 	variant?: "primary" | "secondary";
 	disabled?: boolean;
 };
 
+function isOnlyTextNode(node: ReactNode): boolean {
+	if (node === null || node === undefined || typeof node === "boolean") return true;
+	if (typeof node === "string" || typeof node === "number") return true;
+	if (Array.isArray(node)) return node.every(isOnlyTextNode);
+	if (typeof node === "object") {
+		// Detecta Fragment sin importar React explícitamente
+		const maybeElement: any = node;
+		if (maybeElement?.type === Symbol.for("react.fragment")) {
+			return isOnlyTextNode(maybeElement?.props?.children);
+		}
+		return false;
+	}
+	return false;
+}
+
 export function Button({ onPress, children, variant = "primary", disabled = false }: ButtonProps) {
+	const wrapInText = isOnlyTextNode(children);
 	return (
 		<Pressable
 			onPress={onPress}
 			disabled={disabled}
-			style={({ pressed }) => [
-				styles.button,
-				variant === "primary" ? styles.primary : styles.secondary,
-				pressed && styles.pressed,
-				disabled && styles.disabled,
-			]}
+			style={({ pressed }) => {
+				const baseStyles = [
+					styles.button,
+					variant === "primary" ? styles.primary : styles.secondary,
+				];
+				if (pressed) baseStyles.push(styles.pressed);
+				if (disabled) baseStyles.push(styles.disabled);
+				return baseStyles;
+			}}
 		>
-			{typeof children === "string" ? (
-				<Text style={[styles.text, variant === "secondary" && styles.textSecondary]}>{children}</Text>
+			{wrapInText ? (
+				<Text style={[styles.text, variant === "secondary" ? styles.textSecondary : undefined]}>
+					{children}
+				</Text>
 			) : (
 				children
 			)}
