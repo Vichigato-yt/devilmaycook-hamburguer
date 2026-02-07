@@ -2,8 +2,8 @@ import { HAMBURGER_INGREDIENTS, type HamburgerIngredient } from "@/lib/core/doma
 import React, { useMemo } from "react";
 import { PixelRatio, StyleSheet, View } from "react-native";
 import { HamburgerLayerCanvas } from "./hamburger/HamburgerLayerCanvas";
+import type { GlbAsset, HamburgerLayerConfig } from "./hamburger/HamburgerModel";
 import { HamburgerSingleCanvas } from "./hamburger/HamburgerSingleCanvas";
-import type { HamburgerLayerConfig } from "./hamburger/HamburgerModel";
 
 export type Hamburger3DLayout = "single" | "separate";
 
@@ -12,7 +12,12 @@ type Hamburger3DProps = {
 	selectedIngredients?: HamburgerIngredient[];
 };
 
-const MODEL_ASSETS: Record<string, any> = {
+/**
+ * Mapa de assets GLB disponibles.
+ * Nota: `leshuga` es el nombre del archivo en assets (typo histórico),
+ * pero el dominio usa `lechuga`.
+ */
+const MODEL_ASSETS: Record<string, GlbAsset> = {
 	pansuperior: require("@/assets/images/Hamburguesa/pansuperior.glb"),
 	paninferior: require("@/assets/images/Hamburguesa/paninferior.glb"),
 	queso: require("@/assets/images/Hamburguesa/queso.glb"),
@@ -25,8 +30,11 @@ export function Hamburger3D({
 	layout = "single",
 	selectedIngredients = ["queso", "pepinillos", "lechuga", "carne"],
 }: Hamburger3DProps) {
+	// DPR limitado para balancear calidad y rendimiento en móviles.
 	const dpr = Math.min(2, Math.max(1, PixelRatio.get()));
 
+	// Construye las capas (pan superior + ingredientes + pan inferior) con ids únicos
+	// para soportar ingredientes duplicados.
 	const layers: HamburgerLayerConfig[] = useMemo(() => {
 		const built: HamburgerLayerConfig[] = [
 			{
@@ -58,6 +66,7 @@ export function Hamburger3D({
 	}, [selectedIngredients]);
 
 	if (layout === "separate") {
+		// Modo galería: un Canvas por capa, con cámara/iluminación automática vía Stage.
 		return (
 			<View style={styles.container}>
 				<View style={styles.gallery}>
@@ -69,6 +78,7 @@ export function Hamburger3D({
 		);
 	}
 
+	// Modo single: todas las capas en un solo Canvas con cámara dinámica.
 	return <HamburgerSingleCanvas layers={layers} dpr={dpr} />;
 }
 
