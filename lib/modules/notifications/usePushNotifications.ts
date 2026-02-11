@@ -45,7 +45,6 @@ export const usePushNotifications = (userId?: string) => {
         await NotificationAdapter.registerForPushNotificationsAsync();
 
       if (token) {
-        console.log('Push token obtenido:', token);
         await saveTokenToDatabase(token, userId);
       }
     };
@@ -59,8 +58,6 @@ export const usePushNotifications = (userId?: string) => {
     const subscription =
       NotificationAdapter.addNotificationReceivedListener((notification) => {
         const { title, body, data } = notification.request.content;
-
-        console.log('📬 Foreground notification:', { title, body, data });
 
         Alert.alert(
           title ?? 'Notificación',
@@ -95,7 +92,6 @@ export const usePushNotifications = (userId?: string) => {
           const data = response.notification.request.content
             .data as NotificationData;
 
-          console.log('👆 Notification tapped (bg/killed):', data);
           handleNotificationNavigation(data, router);
         }
       );
@@ -116,7 +112,6 @@ export const usePushNotifications = (userId?: string) => {
       const data = response.notification.request.content
         .data as NotificationData;
 
-      console.log('🚀 App opened from killed state:', data);
       handleNotificationNavigation(data, router);
     });
   }, [router]);
@@ -135,7 +130,5 @@ async function saveTokenToDatabase(token: string, userId: string) {
 
   if (error) {
     console.error('Error guardando dispositivo:', error);
-  } else {
-    console.log('Dispositivo registrado en Supabase.');
   }
 }

@@ -41,7 +41,6 @@ export const NotificationAdapter = {
     }
 
     if (!Device.isDevice) {
-      console.log('Push notifications require a physical device.');
       return null;
     }
 
@@ -54,7 +53,6 @@ export const NotificationAdapter = {
     }
 
     if (finalStatus !== 'granted') {
-      console.log('Push notifications permission was denied by the user.');
       return null;
     }
 
